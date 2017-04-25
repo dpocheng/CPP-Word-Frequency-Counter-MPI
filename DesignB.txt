@@ -1,0 +1,28 @@
+MPI_Initialize
+
+procId = MPI_Comm_rank(MPI_COMM_WORLD)
+numProc = MPI_Comm_size(MPI_COMM_WORLD)
+
+if(procId == 0) // Root Node
+    read file into lines
+
+Timing_Starts()
+
+Scatter lines from Root to other nodes, each gets ARRAY_SIZE/numProc lines into my_lines
+(Take care of left-over chunk)
+Preferably create strings from my_lines(using: my_string_vector.push_back(string_for_each_my_lines))
+my_count = Compute_word_frequenct(my_string_vector, search_word)
+
+if( partB1 )
+    Reduce my_count from all nodes to finalResult of Root
+else
+    Receive my_count from procId-1
+    Add my_count to that and send to procId+1
+    Stop at Root and put my_count in finalResult
+    (Figure out how to do it right!)
+
+if(procId == 0) // Master Node
+    doOutput(finalResult)
+    Timing_ends()
+
+MPI_Finalize
